@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const project = await Project.findOne({
         slug
-    }).lean()
+    }).lean() as any
 
     if (!project) {
         return {
@@ -84,7 +84,7 @@ async function getProject(slug: string): Promise<ProjectWithDetails | null> {
                 select: 'title slug category coverImage',
                 model: Project
             })
-            .lean()
+            .lean() as any
 
         if (!project) return null
 

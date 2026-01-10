@@ -32,12 +32,14 @@ export interface CoverImage {
     height: number;
 }
 
+export type ProjectCategory = 'Branding' | 'Social Media' | 'Print' | 'Photography' | 'Package Design' | 'Corporate Display' | 'Logo Design';
+
 export interface IProject {
     _id?: string;
     title: string;
     slug: string;
     excerpt: string;
-    category: 'Branding' | 'Social Media' | 'Print' | 'Photography' | 'Package Design' | 'Corporate Display';
+    category: ProjectCategory;
     subCategory?: string;
     featured: boolean;
     featuredOrder: number;

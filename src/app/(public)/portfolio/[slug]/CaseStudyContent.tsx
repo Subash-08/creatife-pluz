@@ -1,4 +1,12 @@
-import { Target, Zap, Award, CheckCircle2, Calendar, Users, Clock } from 'lucide-react'
+import {
+    Target,
+    Zap,
+    Award,
+    CheckCircle2,
+    Calendar,
+    Users,
+    Clock
+} from 'lucide-react';
 import { ProjectWithDetails } from './types'
 
 interface CaseStudyContentProps {

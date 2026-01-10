@@ -15,14 +15,14 @@ function AdminContent({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     // Check if current route is login page (relative to parent layout or absolute)
-    const isLoginPage = pathname === '/auth/admin/login';
+    const isLoginPage = pathname === '/admin/login';
 
     useEffect(() => {
         // Don't check auth on login page
         if (isLoginPage || status === 'loading') return;
 
         if (!session) {
-            router.push('/auth/admin/login');
+            router.push('/admin/login');
         }
     }, [session, status, router, isLoginPage]);
 

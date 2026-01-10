@@ -16,7 +16,7 @@ interface Project {
     slug: string
     category: string
     featured: boolean
-    status: 'draft' | 'published' | 'archived'
+    status: 'draft' | 'published' | 'archived' | string
     publishedAt?: string
     createdAt: string
 }

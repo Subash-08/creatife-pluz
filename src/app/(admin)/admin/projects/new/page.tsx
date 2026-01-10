@@ -41,7 +41,6 @@ export default function AddNewProjectPage() {
         status: 'draft'
     })
 
-    // app/(admin)/admin/projects/new/page.tsx
     const handleSubmit = async (data: ProjectFormData) => {
         console.log('📤 Page received form data:', data)
         setIsSubmitting(true)
@@ -64,8 +63,10 @@ export default function AddNewProjectPage() {
 
             toast.success('Project created successfully!')
 
-            // Redirect based on status
-            if (data.status === 'published') {
+            // Ensure status is valid before redirect
+            const projectStatus = data.status as 'draft' | 'published' | 'archived'
+
+            if (projectStatus === 'published') {
                 router.push('/admin/projects')
             } else {
                 router.push(`/admin/projects/${result.data._id}/edit`)
@@ -83,7 +84,7 @@ export default function AddNewProjectPage() {
     }
 
     const handlePublish = () => {
-        const publishData = {
+        const publishData: ProjectFormData = {
             ...formData,
             status: 'published',
             publishedAt: new Date().toISOString()

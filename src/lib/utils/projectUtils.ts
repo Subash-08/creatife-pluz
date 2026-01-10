@@ -1,5 +1,5 @@
 // lib/utils/projectUtils.ts
-import { Project, ProjectCategory } from '@/lib/types/project';
+import { IProject, ProjectCategory } from '@/lib/types/project';
 
 export const categoryColors: Record<ProjectCategory, string> = {
     'Branding': 'bg-blue-500/10 text-blue-400 border-blue-500/20',
@@ -30,7 +30,7 @@ export function generateSlug(title: string): string {
         .trim();
 }
 
-export function validateProjectData(data: Partial<Project>): string[] {
+export function validateProjectData(data: Partial<IProject>): string[] {
     const errors: string[] = [];
 
     if (!data.title?.trim()) errors.push('Title is required');

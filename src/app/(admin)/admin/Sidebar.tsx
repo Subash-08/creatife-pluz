@@ -49,7 +49,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     const [collapsed, setCollapsed] = useState(false);
 
     const handleSignOut = async () => {
-        await signOut({ callbackUrl: '/auth/admin/login' });
+        await signOut({ callbackUrl: '/admin/login' });
     };
 
     return (

@@ -16,7 +16,7 @@ const projectSchema = z.object({
         .min(1, 'Slug is required')
         .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase with hyphens'),
     excerpt: z.string().min(1, 'Excerpt is required').max(200, 'Excerpt must be 200 characters or less'),
-    category: z.enum(['Branding', 'Social Media', 'Print', 'Photography', 'Package Design', 'Corporate Display']),
+    category: z.enum(['Branding', 'Social Media', 'Print', 'Photography', 'Package Design', 'Corporate Display', 'Logo Design']),
     subCategory: z.string().optional(),
     featured: z.boolean().default(false),
     featuredOrder: z.number().min(0).default(0),
@@ -134,7 +134,7 @@ export default function ProjectForm({ formData, onChange, onSubmit, isSubmitting
         formState: { errors, isDirty },
         reset
     } = useForm<ProjectFormValues>({
-        resolver: zodResolver(projectSchema),
+        resolver: zodResolver(projectSchema) as any,
         defaultValues: formData || {
             title: '',
             slug: '',
@@ -388,8 +388,8 @@ export default function ProjectForm({ formData, onChange, onSubmit, isSubmitting
     }
 
     // Add tool
-    const handleAddTool = (e?: React.KeyboardEvent) => {
-        if (e && e.key !== 'Enter') return
+    const handleAddTool = (e?: any) => {
+        if (e && e.key && e.key !== 'Enter') return
 
         if (newTool.trim()) {
             const currentTools = watch('tools') || []
@@ -405,8 +405,8 @@ export default function ProjectForm({ formData, onChange, onSubmit, isSubmitting
     }
 
     // Add keyword
-    const handleAddKeyword = (e?: React.KeyboardEvent) => {
-        if (e && e.key !== 'Enter') return
+    const handleAddKeyword = (e?: any) => {
+        if (e && e.key && e.key !== 'Enter') return
 
         if (newKeyword.trim()) {
             const currentKeywords = watch('keywords') || []
@@ -565,6 +565,7 @@ export default function ProjectForm({ formData, onChange, onSubmit, isSubmitting
                                             <option value="Photography">Photography</option>
                                             <option value="Package Design">Package Design</option>
                                             <option value="Corporate Display">Corporate Display</option>
+                                            <option value="Logo Design">Logo Design</option>
                                         </select>
                                     </div>
                                     <div>

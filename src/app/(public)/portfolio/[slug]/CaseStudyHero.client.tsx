@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react';
 import Magnetic from './Magnetic.client'
 import { ProjectWithDetails } from './types'
 import gsap from 'gsap'
