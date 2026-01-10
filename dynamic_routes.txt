@@ -1,0 +1,4 @@
+D:\Subash\project\creative-pluz-nextjs\src\app\(admin)\admin\projects\[slug]
+D:\Subash\project\creative-pluz-nextjs\src\app\(public)\portfolio\[slug]
+D:\Subash\project\creative-pluz-nextjs\src\app\api\case-studies\[slug]
+D:\Subash\project\creative-pluz-nextjs\src\app\api\projects\[slug]
