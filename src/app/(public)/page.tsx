@@ -1,27 +1,11 @@
-// app/(public)/page.tsx - MAIN PAGE (Server Component)
-import { Metadata } from 'next'
-import HeroSection from './components/HeroSection'  // Still 'use client'
-import MarqueeSection from './components/MarqueeSection'
-import IntroductionSection from './components/IntroductionSection'
-import ExpertiseSection from './components/ExpertiseSection'
-import SelectedWorkSection from './components/SelectedWorkSection'
-import CTASection from './components/CTASection'
+import { Metadata } from 'next';
+import HomeClient from './HomeClient';
 
-// ✅ Add metadata HERE in the Server Component
 export const metadata: Metadata = {
-    title: 'Creative Agency | Full-Spectrum Branding & Design',
-    description: 'High-performance creative agency specializing in branding, design, photography, and physical signage. Bridging digital and physical worlds.',
-}
+    title: "Creative Pluz - New-Age Digital Agency",
+    description: "We craft digital futures. Specializing in Branding, Design, Photography, and Signage to help brands dominate their market.",
+};
 
 export default function HomePage() {
-    return (
-        <main>
-            <HeroSection />
-            <MarqueeSection />
-            <IntroductionSection />
-            <ExpertiseSection />
-            <SelectedWorkSection />
-            <CTASection />
-        </main>
-    )
+    return <HomeClient />;
 }

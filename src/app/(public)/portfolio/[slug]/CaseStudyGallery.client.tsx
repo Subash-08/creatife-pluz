@@ -1,18 +1,58 @@
 'use client'
 
 import { useRef } from 'react'
-import { useGSAPGallery } from './hooks/useGSAPGallery'
 import { GalleryItem } from './types'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGSAP } from '@gsap/react'
+
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger)
+}
 
 interface CaseStudyGalleryProps {
     gallery: GalleryItem[]
 }
 
 export default function CaseStudyGallery({ gallery }: CaseStudyGalleryProps) {
-    const containerRef = useRef<HTMLDivElement>(null)
     const galleryRef = useRef<HTMLDivElement>(null)
+    const containerRef = useRef<HTMLDivElement>(null)
 
-    useGSAPGallery(galleryRef, gallery?.length || 0)
+    useGSAP(() => {
+        if (!gallery || gallery.length === 0) return
+
+        const cards = gsap.utils.toArray<HTMLElement>('.gallery-card')
+
+        const timeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: galleryRef.current,
+                start: 'top top',
+                end: `+=${gallery.length * 100}%`,
+                scrub: 1,
+                pin: true,
+                anticipatePin: 1,
+                invalidateOnRefresh: true, // Key for handling layout changes
+            }
+        })
+
+        cards.forEach((card: HTMLElement, i: number) => {
+            if (i === cards.length - 1) return
+
+            timeline.to(card, {
+                yPercent: -120,
+                rotateX: 10,
+                scale: 0.9,
+                opacity: 0,
+                filter: "blur(10px)",
+                skewX: 2,
+                ease: "power2.inOut",
+            })
+        })
+
+        // Force a recalculation of start/end points after setup
+        ScrollTrigger.refresh()
+
+    }, { scope: galleryRef, dependencies: [gallery] })
 
     if (!gallery || gallery.length === 0) {
         return null
@@ -21,7 +61,7 @@ export default function CaseStudyGallery({ gallery }: CaseStudyGalleryProps) {
     return (
         <section
             ref={galleryRef}
-            className="relative h-screen bg-brand-dark overflow-hidden"
+            className="relative h-screen bg-brand-dark overflow-hidden z-20" // z-20 ensures it sits above hero background if needed
             aria-label="Project gallery"
         >
             <div
@@ -36,15 +76,14 @@ export default function CaseStudyGallery({ gallery }: CaseStudyGalleryProps) {
                         style={{ zIndex: gallery.length - i }}
                         aria-label={`Gallery item ${i + 1}: ${item.label || ''}`}
                     >
+                        {/* Image Code same as before */}
                         <img
                             src={item.url}
                             className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
                             alt={item.alt || item.label || `Gallery image ${i + 1}`}
                             loading="lazy"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                         />
 
-                        {/* Card Label Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
                         <div className="absolute bottom-12 left-12">
                             <div className="flex items-center gap-4 mb-2">
@@ -58,7 +97,6 @@ export default function CaseStudyGallery({ gallery }: CaseStudyGalleryProps) {
                             </h3>
                         </div>
 
-                        {/* Card Number Corner */}
                         <div className="absolute top-12 right-12">
                             <div className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center backdrop-blur-md bg-black/30">
                                 <span className="text-xl font-display font-black text-brand-primary">
@@ -70,14 +108,12 @@ export default function CaseStudyGallery({ gallery }: CaseStudyGalleryProps) {
                 ))}
             </div>
 
-            {/* Perspective Background Element */}
             <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
                 <span className="text-[30vw] font-display font-black text-white/[0.02] uppercase italic select-none">
                     VISION
                 </span>
             </div>
 
-            {/* Scroll Hint */}
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-4 opacity-40">
                 <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white">
                     Scroll to unfold

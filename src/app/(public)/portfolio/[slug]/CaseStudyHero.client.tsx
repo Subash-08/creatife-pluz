@@ -1,11 +1,18 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react'
 import Magnetic from './Magnetic.client'
 import { ProjectWithDetails } from './types'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGSAP } from '@gsap/react' // Make sure to install: npm install @gsap/react
+
+// Register plugin
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger)
+}
 
 interface CaseStudyHeroProps {
     project: ProjectWithDetails
@@ -14,9 +21,10 @@ interface CaseStudyHeroProps {
 export default function CaseStudyHero({ project }: CaseStudyHeroProps) {
     const heroRef = useRef<HTMLDivElement>(null)
     const textRef = useRef<HTMLHeadingElement>(null)
+    const bgImageRef = useRef<HTMLDivElement>(null)
 
-    useEffect(() => {
-        // GSAP animation for hero text
+    useGSAP(() => {
+        // 1. Text Entry Animation
         if (textRef.current) {
             gsap.fromTo(
                 textRef.current,
@@ -31,27 +39,31 @@ export default function CaseStudyHero({ project }: CaseStudyHeroProps) {
             )
         }
 
-        // Parallax effect on scroll
-        const handleScroll = () => {
-            if (!heroRef.current) return
-
-            const scrolled = window.scrollY
-            const parallaxSpeed = 0.5
-            heroRef.current.style.transform = `translateY(${scrolled * parallaxSpeed}px)`
+        // 2. Parallax Effect (GSAP ScrollTrigger instead of manual listener)
+        // We animate the Background Image container, NOT the heroRef container.
+        if (bgImageRef.current) {
+            gsap.to(bgImageRef.current, {
+                yPercent: 30, // Move image down 30% while scrolling
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: heroRef.current,
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true,
+                }
+            })
         }
-
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
+    }, { scope: heroRef })
 
     return (
         <section
             ref={heroRef}
-            className="relative h-screen w-full overflow-hidden flex items-center justify-center"
+            className="relative h-screen w-full overflow-hidden flex items-center justify-center z-10" // Added z-10 to manage stacking
             aria-label={`${project.title} case study hero section`}
         >
-            {/* Background Image */}
-            <div className="absolute inset-0 z-0">
+            {/* Background Image Container - Ref added here */}
+            <div ref={bgImageRef} className="absolute inset-0 z-0 h-[120%] w-full -top-[10%]">
+                {/* Note: Made height 120% and top -10% to give room for parallax movement without showing whitespace */}
                 {project.coverImage?.url ? (
                     <img
                         src={project.coverImage.url}
@@ -105,7 +117,7 @@ export default function CaseStudyHero({ project }: CaseStudyHeroProps) {
             </div>
 
             {/* Scroll Indicator */}
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20">
                 <span className="text-xs text-slate-400 uppercase tracking-widest">
                     Scroll down
                 </span>

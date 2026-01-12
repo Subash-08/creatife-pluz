@@ -69,7 +69,7 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
                                             )}
                                         </div>
                                         <div
-                                            className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 scale-50 group-hover:scale-100"
+                                            className="w-12 h-12 rounded-full border b-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 scale-50 group-hover:scale-100"
                                             aria-hidden="true"
                                         >
                                             <ArrowUpRight className="text-brand-primary" />

@@ -4,8 +4,11 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import Script from 'next/script';
+import SmoothScroll from '@/components/SmoothScroll';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: 'Creative Pluz - Digital Experience Agency',
@@ -19,14 +22,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="light"> {/* Changed from 'dark' to 'light' */}
-      <body className={`${inter.className} bg-gray-50 text-gray-900`}> {/* Light theme colors */}
+      <body className={`${inter.variable} bg-brand-dark text-white selection:bg-brand-primary selection:text-black`}>
         {/* Next.js Script handles injection correctly without manual <head> tags */}
         <Script
           src="https://upload-widget.cloudinary.com/global/all.js"
           strategy="afterInteractive"
         />
         <Providers>
-          {children}
+          <SmoothScroll>
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-grow relative z-10">
+                {children}
+              </main>
+              <div className="relative z-10">
+                <Footer />
+              </div>
+            </div>
+          </SmoothScroll>
         </Providers>
       </body>
     </html>

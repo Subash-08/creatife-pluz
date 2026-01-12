@@ -46,7 +46,7 @@ export default async function PortfolioPage() {
     const categories = getCategories(projects)
 
     return (
-        <main className="min-h-screen bg-gray-900">
+        <main className="min-h-screen">
             <PortfolioContent />
 
             {/* Server renders categories, Client handles filtering */}

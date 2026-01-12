@@ -1,34 +1,25 @@
-import HeroSection from './HeroSection';
-import HorizontalScrollSection from './HorizontalScrollSection';
-import ServicesSection from './ServicesSection';
-import CTASection from './CTASection';
-import './Branding.css';
 import { Metadata } from 'next';
+import Hero from './Hero';
+import Services from './Services';
+import Interactive from './Interactive';
+import Showcase from './Showcase';
+import FeaturesWhyUs from './FeaturesWhyUs';
+import CallToAction from './CallToAction';
 
 export const metadata: Metadata = {
-    title: 'Logo & Branding Design - Creative Pluz',
-    description: 'Build a brand that speaks for you. Custom logo design, brand guidelines, and high-impact product packaging solutions.',
-    openGraph: {
-        title: 'Logo & Branding Design - Creative Pluz',
-        description: 'Build a brand that speaks for you. Custom logo design, brand guidelines, and high-impact product packaging solutions.',
-        type: 'website',
-    },
-    twitter: {
-        card: 'summary_large_image',
-        title: 'Logo & Branding Design - Creative Pluz',
-        description: 'Build a brand that speaks for you. Custom logo design, brand guidelines, and high-impact product packaging solutions.',
-    }
-}
-
-const Branding: React.FC = () => {
-    return (
-        <>
-            <HeroSection />
-            {/* <HorizontalScrollSection />
-            <ServicesSection />
-            <CTASection /> */}
-        </>
-    );
+    title: "Creative Pluz - New-Age Digital Agency",
+    description: "We craft digital futures. Specializing in Branding, Design, Photography, and Signage to help brands dominate their market.",
 };
 
-export default Branding;
+export default function HomePage() {
+    return (
+        <>
+            <Hero />
+            <Services />
+            <Interactive />
+            <Showcase />
+            <FeaturesWhyUs />
+            <CallToAction />
+        </>
+    );
+}

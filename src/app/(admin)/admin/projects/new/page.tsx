@@ -63,17 +63,20 @@ export default function AddNewProjectPage() {
 
             toast.success('Project created successfully!')
 
-            // Ensure status is valid before redirect
-            const projectStatus = data.status as 'draft' | 'published' | 'archived'
-
-            if (projectStatus === 'published') {
-                router.push('/admin/projects')
-            } else {
-                router.push(`/admin/projects/${result.data._id}/edit`)
-            }
+            // Always redirect to project list
+            router.push('/admin/projects')
         } catch (error) {
             console.error('❌ Error creating project:', error)
-            toast.error(error instanceof Error ? error.message : 'Failed to create project')
+            const errorMessage = error instanceof Error ? error.message : 'Failed to create project'
+
+            // Map common errors to short 3-4 word messages
+            let shortMessage = 'Error: Failed to Save'
+            if (errorMessage.includes('Slug already exists')) shortMessage = 'Error: Duplicate Slug'
+            else if (errorMessage.includes('Missing required fields')) shortMessage = 'Error: Missing Fields'
+            else if (errorMessage.includes('Cover image is required')) shortMessage = 'Error: Image Required'
+            else if (errorMessage.includes('Unauthorized')) shortMessage = 'Error: Unauthorized Access'
+
+            toast.error(shortMessage)
         } finally {
             setIsSubmitting(false)
         }
