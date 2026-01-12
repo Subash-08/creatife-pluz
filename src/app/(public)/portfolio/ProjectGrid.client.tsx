@@ -29,7 +29,7 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
                             exit={{ opacity: 0, scale: 0.9 }}
                             transition={{ duration: 0.5 }}
                             className={`relative group overflow-hidden rounded-[2rem] bg-gray-900 border border-white/5 ${project.size === 'large' ? 'md:col-span-2 md:row-span-2' :
-                                    project.size === 'vertical' ? 'md:row-span-2' : ''
+                                project.size === 'vertical' ? 'md:row-span-2' : ''
                                 }`}
                         >
                             <Link
@@ -42,7 +42,7 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
                                     <img
                                         src={project.coverImage.url}
                                         alt={project.coverImage.alt || project.title}
-                                        className="w-full h-full object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105"
+                                        className="w-full h-full object-cover transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105"
                                         loading="lazy"
                                     />
                                 ) : (
@@ -89,27 +89,6 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
                     ))}
                 </AnimatePresence>
 
-                {/* CTA Card */}
-                <motion.div
-                    layout
-                    className="border-2 border-dashed border-white/10 rounded-[2rem] flex flex-col items-center justify-center p-12 hover:border-brand-primary/40 transition-colors group cursor-pointer"
-                >
-                    <Link
-                        href="/contact"
-                        className="flex flex-col items-center justify-center w-full h-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-gray-900 rounded-[2rem]"
-                        aria-label="Start a new project with us"
-                    >
-                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:bg-brand-primary group-hover:text-black transition-all">
-                            <Plus size={32} />
-                        </div>
-                        <h3 className="text-slate-500 font-bold uppercase tracking-widest text-sm group-hover:text-white transition-colors">
-                            Start Your Project
-                        </h3>
-                        <p className="text-slate-600 text-xs mt-2 text-center">
-                            Let's create something amazing together
-                        </p>
-                    </Link>
-                </motion.div>
             </motion.div>
 
             {/* Empty State */}

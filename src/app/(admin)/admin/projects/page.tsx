@@ -239,7 +239,7 @@ export default function ProjectsPage() {
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2">
                                                     <Link
-                                                        href={`/projects/${project.slug}`}
+                                                        href={`/portfolio/${project.slug}`}
                                                         target="_blank"
                                                         className="p-1.5 text-gray-400 hover:text-blue-600 transition-colors"
                                                         title="View live"

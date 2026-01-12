@@ -9,19 +9,19 @@ import CTASection from './components/CTASection'
 
 // ✅ Add metadata HERE in the Server Component
 export const metadata: Metadata = {
-    title: 'Creative Pluz - Digital Experience Agency',
-    description: 'We craft digital experiences that defy convention. Strategy, Design, and Development for the bold.',
+    title: 'Creative Agency | Full-Spectrum Branding & Design',
+    description: 'High-performance creative agency specializing in branding, design, photography, and physical signage. Bridging digital and physical worlds.',
 }
 
-export default function Home() {
+export default function HomePage() {
     return (
-        <>
+        <main>
             <HeroSection />
             <MarqueeSection />
             <IntroductionSection />
             <ExpertiseSection />
             <SelectedWorkSection />
             <CTASection />
-        </>
+        </main>
     )
 }

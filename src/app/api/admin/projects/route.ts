@@ -66,6 +66,16 @@ export async function POST(request: NextRequest) {
         const project = await Project.create(data)
         console.log('✅ Project created with ID:', project._id)
 
+        // Trigger on-demand revalidation
+        try {
+            const { revalidatePath } = await import('next/cache')
+            revalidatePath('/portfolio')
+            revalidatePath(`/portfolio/${project.slug}`)
+            console.log('🔄 Revalidated portfolio paths')
+        } catch (error) {
+            console.error('Failed to revalidate:', error)
+        }
+
         return NextResponse.json({
             success: true,
             message: 'Project created successfully',

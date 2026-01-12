@@ -11,8 +11,8 @@ interface PageProps {
     params: Promise<{ slug: string }>
 }
 
-// ISR: Revalidate every 24 hours
-export const revalidate = 86400
+// On-Demand Revalidation: Page is static until manually revalidated
+export const revalidate = false
 
 // Generate static params at build time
 export async function generateStaticParams() {

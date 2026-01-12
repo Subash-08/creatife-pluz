@@ -3,23 +3,90 @@
 
 import { useSession } from 'next-auth/react';
 import { BarChart3, Users, FolderOpen, TrendingUp, Calendar, Award, Plus, ExternalLink, Edit } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { IProject } from '@/lib/types/project';
+
+interface DashboardStats {
+    projects: {
+        total: number;
+        published: number;
+        draft: number;
+    };
+    users: number;
+}
 
 export default function AdminDashboardPage() {
     const { data: session } = useSession();
+    const [stats, setStats] = useState<DashboardStats | null>(null);
+    const [recentProjects, setRecentProjects] = useState<IProject[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const stats = [
-        { label: 'Total Projects', value: '24', icon: <FolderOpen className="w-6 h-6" />, change: '+12%', color: 'bg-blue-500' },
-        { label: 'Published', value: '18', icon: <Award className="w-6 h-6" />, change: '+5%', color: 'bg-green-500' },
-        { label: 'Drafts', value: '6', icon: <Calendar className="w-6 h-6" />, change: '+2', color: 'bg-amber-500' },
-        { label: 'Monthly Views', value: '12.5K', icon: <TrendingUp className="w-6 h-6" />, change: '+24%', color: 'bg-purple-500' },
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            try {
+                const [statsRes, projectsRes] = await Promise.all([
+                    fetch('/api/admin/stats'),
+                    fetch('/api/admin/projects?limit=5')
+                ]);
+
+                if (statsRes.ok) {
+                    const statsData = await statsRes.json();
+                    if (statsData.success) {
+                        setStats(statsData.data);
+                    }
+                }
+
+                if (projectsRes.ok) {
+                    const projectsData = await projectsRes.json();
+                    if (projectsData.success) {
+                        setRecentProjects(projectsData.data);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchDashboardData();
+    }, []);
+
+    const statCards = [
+        {
+            label: 'Total Projects',
+            value: stats?.projects.total.toString() || '0',
+            icon: <FolderOpen className="w-6 h-6" />,
+            change: 'Total',
+            color: 'bg-blue-500'
+        },
+        {
+            label: 'Published',
+            value: stats?.projects.published.toString() || '0',
+            icon: <Award className="w-6 h-6" />,
+            change: 'Active',
+            color: 'bg-green-500'
+        },
+        {
+            label: 'Drafts',
+            value: stats?.projects.draft.toString() || '0',
+            icon: <Calendar className="w-6 h-6" />,
+            change: 'Pending',
+            color: 'bg-amber-500'
+        },
+        {
+            label: 'Total Users',
+            value: stats?.users.toString() || '0',
+            icon: <Users className="w-6 h-6" />,
+            change: 'Registered',
+            color: 'bg-purple-500'
+        },
     ];
 
-    const recentProjects = [
-        { name: 'Nebula Fintech', category: 'Branding', status: 'Published', date: 'Jan 15, 2024' },
-        { name: 'Aura Skin', category: 'Social Media', status: 'Published', date: 'Jan 10, 2024' },
-        { name: 'Vortex Motion', category: 'Print', status: 'Draft', date: 'Jan 8, 2024' },
-        { name: 'Glow Campaign', category: 'Social Media', status: 'Published', date: 'Jan 5, 2024' },
-    ];
+    if (isLoading) {
+        return <div className="p-8 text-center text-gray-500">Loading dashboard data...</div>;
+    }
 
     return (
         <div className="space-y-8">
@@ -44,7 +111,7 @@ export default function AdminDashboardPage() {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {stats.map((stat, index) => (
+                {statCards.map((stat, index) => (
                     <div key={index} className="bg-white border border-gray-200 rounded-xl p-6 hover:border-blue-300 hover:shadow-md transition-all duration-300 group">
                         <div className="flex items-center justify-between mb-4">
                             <div className={`p-3 ${stat.color} rounded-lg text-white group-hover:scale-105 transition-transform`}>
@@ -67,9 +134,9 @@ export default function AdminDashboardPage() {
                         <h2 className="text-lg font-semibold text-gray-900">Recent Projects</h2>
                         <p className="text-sm text-gray-600">Latest projects from your portfolio</p>
                     </div>
-                    <button className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2 transition-colors">
+                    <Link href="/admin/projects" className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2 transition-colors">
                         View All <ExternalLink size={14} />
-                    </button>
+                    </Link>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full">
@@ -83,32 +150,47 @@ export default function AdminDashboardPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {recentProjects.map((project, index) => (
-                                <tr key={index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                    <td className="p-4">
-                                        <div className="font-medium text-gray-900">{project.name}</div>
-                                    </td>
-                                    <td className="p-4">
-                                        <span className="inline-block px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full">
-                                            {project.category}
-                                        </span>
-                                    </td>
-                                    <td className="p-4">
-                                        <span className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-full ${project.status === 'Published'
-                                            ? 'bg-green-100 text-green-800 border border-green-200'
-                                            : 'bg-amber-100 text-amber-800 border border-amber-200'
-                                            }`}>
-                                            {project.status}
-                                        </span>
-                                    </td>
-                                    <td className="p-4 text-gray-600">{project.date}</td>
-                                    <td className="p-4">
-                                        <button className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2 transition-colors">
-                                            <Edit size={14} /> Edit
-                                        </button>
+                            {recentProjects.length > 0 ? (
+                                recentProjects.map((project) => (
+                                    <tr key={project._id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                                        <td className="p-4">
+                                            <div className="font-medium text-gray-900">{project.title}</div>
+                                        </td>
+                                        <td className="p-4">
+                                            <span className="inline-block px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full">
+                                                {project.category}
+                                            </span>
+                                        </td>
+                                        <td className="p-4">
+                                            <span className={`capitalize inline-flex items-center px-3 py-1 text-xs font-medium rounded-full ${project.status === 'published'
+                                                    ? 'bg-green-100 text-green-800 border border-green-200'
+                                                    : project.status === 'draft'
+                                                        ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                                                        : 'bg-gray-100 text-gray-800 border border-gray-200'
+                                                }`}>
+                                                {project.status}
+                                            </span>
+                                        </td>
+                                        <td className="p-4 text-gray-600">
+                                            {new Date(project.publishedAt || project.createdAt || '').toLocaleDateString()}
+                                        </td>
+                                        <td className="p-4">
+                                            <Link
+                                                href={`/admin/projects/${project._id}/edit`}
+                                                className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2 transition-colors"
+                                            >
+                                                <Edit size={14} /> Edit
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={5} className="p-8 text-center text-gray-500">
+                                        No recent projects found.
                                     </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -119,10 +201,10 @@ export default function AdminDashboardPage() {
                 <div className="bg-white border border-gray-200 rounded-xl p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
                     <div className="space-y-3">
-                        <button className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 flex items-center justify-center gap-2 font-medium shadow-sm hover:shadow">
+                        <Link href="/admin/projects/new" className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 flex items-center justify-center gap-2 font-medium shadow-sm hover:shadow">
                             <Plus size={18} />
                             Add New Project
-                        </button>
+                        </Link>
                         <button className="w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 font-medium">
                             <Users size={18} />
                             Manage Users
@@ -134,10 +216,8 @@ export default function AdminDashboardPage() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
                     <div className="space-y-4">
                         {[
-                            { action: 'Project published', details: 'Nebula Fintech', time: '2 hours ago' },
-                            { action: 'Image uploaded', details: 'Aura Skin gallery', time: '1 day ago' },
-                            { action: 'Project updated', details: 'Vortex Motion details', time: '2 days ago' },
-                            { action: 'New draft created', details: 'Studio X Photography', time: '3 days ago' },
+                            { action: 'Dashboard updated', details: 'Real-time data integration', time: 'Just now' },
+                            { action: 'System check', details: 'All systems operational', time: '1 min ago' },
                         ].map((activity, index) => (
                             <div key={index} className="flex items-start gap-3">
                                 <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>

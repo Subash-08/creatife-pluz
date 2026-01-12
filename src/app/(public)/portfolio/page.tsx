@@ -5,8 +5,8 @@ import PortfolioFilters from './PortfolioFilters.client'
 import ProjectGrid from './ProjectGrid.client'
 import { Project as ProjectType } from './types'
 
-// ISR: Revalidate every 24 hours or on-demand
-export const revalidate = 86400 // 24 hours in seconds
+// On-Demand Revalidation: Page is static until manually revalidated
+export const revalidate = false
 
 async function getProjects(): Promise<ProjectType[]> {
     try {

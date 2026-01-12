@@ -630,6 +630,21 @@ export default function ProjectForm({ formData, onChange, onSubmit, isSubmitting
                                     />
                                 </div>
 
+                                {/* Status */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Status
+                                    </label>
+                                    <select
+                                        {...register('status')}
+                                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                    >
+                                        <option value="draft">Draft</option>
+                                        <option value="published">Published</option>
+                                        <option value="archived">Archived</option>
+                                    </select>
+                                </div>
+
                                 {/* Display Settings */}
                                 <div className="space-y-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
                                     <h3 className="font-medium text-gray-900">Display Settings</h3>

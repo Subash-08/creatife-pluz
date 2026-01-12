@@ -29,18 +29,10 @@ interface SidebarProps {
 
 const menuItems = [
     { label: 'Dashboard', icon: <LayoutDashboard size={20} />, href: '/admin' },
-    { label: 'Projects', icon: <FolderOpen size={20} />, href: '/admin/projects' },
-    { label: 'Portfolio', icon: <Briefcase size={20} />, href: '/admin/portfolio' },
-    { label: 'Media', icon: <Image size={20} />, href: '/admin/media' },
-    { label: 'Branding', icon: <Palette size={20} />, href: '/admin/branding' },
-    { label: 'Analytics', icon: <BarChart3 size={20} />, href: '/admin/analytics' },
-    { label: 'Case Studies', icon: <FileText size={20} />, href: '/admin/case-studies' },
-    { label: 'Users', icon: <Users size={20} />, href: '/admin/users' },
-    { label: 'Settings', icon: <Settings size={20} />, href: '/admin/settings' },
+    { label: 'Projects', icon: <FolderOpen size={20} />, href: '/admin/projects' }
 ];
 
 const quickActions = [
-    { label: 'New Project', icon: <Upload size={16} />, href: '/admin/projects/new' },
     { label: 'View Site', icon: <Home size={16} />, href: '/', external: true },
 ];
 
@@ -57,7 +49,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             {/* Mobile Overlay */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black/20 z-40 lg:hidden"
+                    className="fixed top-0 inset-0 bg-black/20 z-40 lg:hidden"
                     onClick={onClose}
                 />
             )}

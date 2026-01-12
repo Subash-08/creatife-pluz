@@ -93,6 +93,16 @@ export async function PUT(
             )
         }
 
+        // Trigger on-demand revalidation
+        try {
+            const { revalidatePath } = await import('next/cache')
+            revalidatePath('/portfolio')
+            revalidatePath(`/portfolio/${project.slug}`)
+            console.log('🔄 Revalidated portfolio paths')
+        } catch (error) {
+            console.error('Failed to revalidate:', error)
+        }
+
         return NextResponse.json({
             success: true,
             message: 'Project updated successfully',
@@ -140,6 +150,16 @@ export async function DELETE(
                 { success: false, error: 'Project not found' },
                 { status: 404 }
             )
+        }
+
+        // Trigger on-demand revalidation
+        try {
+            const { revalidatePath } = await import('next/cache')
+            revalidatePath('/portfolio')
+            revalidatePath(`/portfolio/${project.slug}`)
+            console.log('🔄 Revalidated portfolio paths')
+        } catch (error) {
+            console.error('Failed to revalidate:', error)
         }
 
         return NextResponse.json({

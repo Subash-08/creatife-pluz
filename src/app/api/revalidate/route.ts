@@ -1,45 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath, revalidateTag } from 'next/cache';
+'use client'
+
+import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 
 export async function POST(request: NextRequest) {
     try {
-        const { path, tag } = await request.json();
+        const secret = request.nextUrl.searchParams.get('secret')
+        const path = request.nextUrl.searchParams.get('path')
 
-        if (!path && !tag) {
-            return NextResponse.json(
-                { success: false, error: 'Either path or tag is required' },
-                { status: 400 }
-            );
-        }
-
-        // Check for secret token (optional security)
-        const secret = request.headers.get('x-revalidate-secret');
-        if (process.env.REVALIDATION_SECRET && secret !== process.env.REVALIDATION_SECRET) {
-            return NextResponse.json(
-                { success: false, error: 'Invalid revalidation secret' },
-                { status: 401 }
-            );
+        if (secret !== process.env.REVALIDATION_SECRET) {
+            return NextResponse.json({ message: 'Invalid token' }, { status: 401 })
         }
 
         if (path) {
-            revalidatePath(path);
-        }
-
-        if (tag) {
-            revalidateTag(tag);
+            revalidatePath(path)
+            return NextResponse.json({ revalidated: true, now: Date.now() })
         }
 
         return NextResponse.json({
-            success: true,
-            message: 'Revalidation triggered',
-            revalidated: { path, tag }
-        });
-
-    } catch (error) {
-        console.error('Error revalidating:', error);
-        return NextResponse.json(
-            { success: false, error: 'Failed to revalidate' },
-            { status: 500 }
-        );
+            revalidated: false,
+            now: Date.now(),
+            message: 'Missing path to revalidate',
+        })
+    } catch (err) {
+        return NextResponse.json({ message: 'Error revalidating' }, { status: 500 })
     }
 }

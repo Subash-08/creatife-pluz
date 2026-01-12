@@ -49,10 +49,12 @@ function AdminContent({ children }: { children: React.ReactNode }) {
     return (
         <div className="min-h-screen bg-gray-50 flex">
             {/* Sidebar - Must be BEFORE main content */}
-            <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+            <div className="fixed top-0">
+                <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+            </div>
 
             {/* Main Content Area */}
-            <div className={`flex-1 transition-all duration-300`}>
+            <div className={`flex-1 transition-all duration-300 ml-64`}>
                 <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
                 <main className="p-6">
