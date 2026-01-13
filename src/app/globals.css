@@ -134,11 +134,6 @@ body {
   transform: translateX(5px);
 }
 
-/* Page Content Spacing */
-main {
-  padding-top: 80px;
-}
-
 /* Marquee Animation (CSS-only, no JS) */
 @keyframes marquee {
   0% {

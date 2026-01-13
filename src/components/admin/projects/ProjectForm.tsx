@@ -506,7 +506,7 @@ export default function ProjectForm({ formData, onChange, onSubmit, isSubmitting
                 </nav>
             </div>
 
-            <div className="p-4 sm:p-8">
+            <div className="p-4 sm:p-8 text-black">
                 {/* Basic Info Tab */}
                 {activeTab === 'basic' && (
                     <div className="space-y-6 sm:space-y-8">
